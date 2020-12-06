@@ -17,10 +17,10 @@
 
 #### Swagger {host:port}/swagger
 - You can try out the api from the swagger ui or use Postman
-- The /Albums may take a bit longer to retrieve the all the albums.
+- The /Albums may take a bit longer to retrieve all the albums.
 
 
-#### Album Enpoints
+#### Album Endpoints
 
 - Get all albums with their photos {host:port}/albums
 
@@ -29,7 +29,7 @@
 - Get photos of an album {host:port}/albums/2/photos
 
 
-#### User Enpoints
+#### User Endpoints
 
 - Get All Users, without albums {host:port}/users
 
