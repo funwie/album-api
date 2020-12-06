@@ -1,0 +1,169 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Runpath.Platform.AlbumApi</name>
+    </assembly>
+    <members>
+        <member name="T:Runpath.Platform.AlbumApi.Controllers.AlbumsController">
+            <summary>
+            Albums
+            </summary>
+        </member>
+        <member name="M:Runpath.Platform.AlbumApi.Controllers.AlbumsController.GetAllAsync">
+            <summary>
+            Get list of albums along with their photos
+            </summary>
+            <remarks>Returns empty list if no alums exist</remarks>
+            <response code="200">List of albums along with their photos or empty list</response>
+        </member>
+        <member name="M:Runpath.Platform.AlbumApi.Controllers.AlbumsController.GetByIdAsync(System.Int32)">
+            <summary>
+            Get an album along with its photos
+            </summary>
+            <param name="id">The album id</param>
+            <response code="200">Album and its photos</response>
+            <response code="404">Album not found</response>
+        </member>
+        <member name="M:Runpath.Platform.AlbumApi.Controllers.AlbumsController.GetAlbumPhotosAsync(System.Int32)">
+            <summary>
+            Get list of photos that belong to an album
+            </summary>
+            <param name="id">The album id</param>
+            <response code="200">List of photos</response>
+            <response code="404">Album not found</response>
+        </member>
+        <member name="T:Runpath.Platform.AlbumApi.Controllers.UsersController">
+            <summary>
+            Users
+            </summary>
+        </member>
+        <member name="M:Runpath.Platform.AlbumApi.Controllers.UsersController.GetAllAsync">
+            <summary>
+            Get list of users
+            </summary>
+            <remarks>Returns empty list if no users exist</remarks>
+            <response code="200">List of users</response>
+        </member>
+        <member name="M:Runpath.Platform.AlbumApi.Controllers.UsersController.GetByIdAsync(System.Int32)">
+            <summary>
+            Get a user along with their albums
+            </summary>
+            <param name="id">The user id</param>
+            <response code="200">User and their albums</response>
+            <response code="404">User not found</response>
+        </member>
+        <member name="M:Runpath.Platform.AlbumApi.Controllers.UsersController.GetAlbumsAsync(System.Int32)">
+            <summary>
+            Get list of a user's albums
+            </summary>
+            <param name="id">The user id</param>
+            <response code="200">List of albums</response>
+            <response code="404">User not found</response>
+        </member>
+        <member name="T:Runpath.Platform.AlbumApi.Responses.AlbumDetails">
+            <summary>
+            An Album 
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.AlbumDetails.Id">
+            <summary>
+            Id of the album.
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.AlbumDetails.UserId">
+            <summary>
+            If of the user that owns the album.
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.AlbumDetails.Title">
+            <summary>
+            Title of the album
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.AlbumDetails.Photos">
+            <summary>
+            Photos of the album
+            </summary>
+        </member>
+        <member name="T:Runpath.Platform.AlbumApi.Responses.PhotoDetails">
+            <summary>
+            A Photo of an Album.
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.PhotoDetails.Id">
+            <summary>
+            The id of the photo.
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.PhotoDetails.Title">
+            <summary>
+            The title of the photo.
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.PhotoDetails.Url">
+            <summary>
+            The Url to the photo.
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.PhotoDetails.ThumbnailUrl">
+            <summary>
+            The url to a thumbnail of the photo.
+            </summary>
+        </member>
+        <member name="T:Runpath.Platform.AlbumApi.Responses.UserDetails">
+            <summary>
+            A User
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Id">
+            <summary>
+            The id of the user
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Name">
+            <summary>
+            The name of the user
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Username">
+            <summary>
+            The username of the user
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Email">
+            <summary>
+            The email of the user
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Address">
+            <summary>
+            The address of the user
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Phone">
+            <summary>
+            The mobile phone number
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Website">
+            <summary>
+            The website of the user
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Company">
+            <summary>
+            The company of the user
+            </summary>
+        </member>
+        <member name="P:Runpath.Platform.AlbumApi.Responses.UserDetails.Albums">
+            <summary>
+            Albums owned by the user
+            </summary>
+        </member>
+        <member name="T:Runpath.Platform.AlbumApi.Services.AlbumService">
+            <summary>
+            Client to access https://jsonplaceholder.typicode.com/
+            </summary>
+        </member>
+    </members>
+</doc>
