@@ -17,7 +17,7 @@
 
 #### Swagger {host:port}/swagger
 - You can try out the api from the swagger ui or use Postman
-- The /Albums may take a bit longer to retrieve all the albums.
+- The /Albums may take a bit longer to render in swagger UI in the browser.
 
 
 #### Album Endpoints
