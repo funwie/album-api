@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Runpath.Platform.AlbumApi.Serializers;
 using Runpath.Platform.Domain;
 using System;
 using System.Collections.Generic;
@@ -19,11 +20,15 @@ namespace Runpath.Platform.AlbumApi.Services
 
         readonly HttpClient _httpClient;
         readonly ILogger<AlbumService> _logger;
+        private readonly ISerializer _serializer;
 
-        public AlbumService(HttpClient httpClient, ILogger<AlbumService> logger)
+        public AlbumService(HttpClient httpClient, 
+                            ILogger<AlbumService> logger,
+                            ISerializer serializer)
         {
             _httpClient = httpClient;
             _logger = logger;
+            _serializer = serializer;
         }
 
         public async Task<IEnumerable<Album>> GetAlbumsAsync()
@@ -38,7 +43,7 @@ namespace Runpath.Platform.AlbumApi.Services
 
             _logger.LogInformation("Get album {Id} from {Url}", albumId, albumPath);
             var albumJsonData = await GetJsonAsync(albumPath);
-            var album = DeserializeJson<Album>(albumJsonData);
+            var album = _serializer.DeserializeJson<Album>(albumJsonData);
 
             if (album == null) return album;
 
@@ -55,7 +60,7 @@ namespace Runpath.Platform.AlbumApi.Services
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
             var usersJsonData = await GetJsonAsync(USERS);
-            var users = DeserializeJson<IEnumerable<User>>(usersJsonData);
+            var users = _serializer.DeserializeJson<IEnumerable<User>>(usersJsonData);
             return users;
         }
 
@@ -66,7 +71,7 @@ namespace Runpath.Platform.AlbumApi.Services
             _logger.LogInformation("Get User {Id} from {Url}", userId, userPath);
 
             var userJsonData = await GetJsonAsync(userPath);
-            var user = DeserializeJson<User>(userJsonData);
+            var user = _serializer.DeserializeJson<User>(userJsonData);
 
             if (user == null) return user;
 
@@ -87,7 +92,7 @@ namespace Runpath.Platform.AlbumApi.Services
         private async Task<IEnumerable<Album>> GetAlbumsAsync(string path)
         {
             var albumsJsonData = await GetJsonAsync(path);
-            var albums = DeserializeJson<IEnumerable<Album>>(albumsJsonData);
+            var albums = _serializer.DeserializeJson<IEnumerable<Album>>(albumsJsonData);
             foreach (var album in albums)
             {
                 album.Photos = await GetPhotosAsync(album.Id);
@@ -102,7 +107,7 @@ namespace Runpath.Platform.AlbumApi.Services
             _logger.LogInformation("Get photos for album {Id} from {Url}", albumId, photosPath);
 
             var photosJsonData = await GetJsonAsync(photosPath);
-            var photos = DeserializeJson<IEnumerable<Photo>>(photosJsonData);
+            var photos = _serializer.DeserializeJson<IEnumerable<Photo>>(photosJsonData);
             return photos;
         }
 
@@ -124,31 +129,6 @@ namespace Runpath.Platform.AlbumApi.Services
             catch (Exception ex)
             {
                 _logger.LogError("Failed to get from {Message}", ex.Message);
-                throw ex;
-            }
-        }
-
-        private T DeserializeJson<T>(string jsonData)
-        {
-            var serializeOptions = new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true
-            };
-
-            try
-            {
-                return JsonSerializer.Deserialize<T>(jsonData, serializeOptions);
-            }
-            catch (JsonException ex)
-            {
-                _logger.LogDebug("Failed to deserialize {Data} into {Type}", jsonData, typeof(T).FullName);
-                _logger.LogError("JsonException {Message}", ex.Message);
-                throw ex;
-            }
-            catch (ArgumentNullException ex)
-            {
-                _logger.LogError("ArgumentNullException {Message}", ex.Message);
                 throw ex;
             }
         }
