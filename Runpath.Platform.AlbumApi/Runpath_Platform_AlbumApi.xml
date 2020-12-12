@@ -160,6 +160,11 @@
             Albums owned by the user
             </summary>
         </member>
+        <member name="T:Runpath.Platform.AlbumApi.Serializers.CustomJsonSerializer">
+            <summary>
+            Json Serialization.
+            </summary>
+        </member>
         <member name="T:Runpath.Platform.AlbumApi.Services.AlbumService">
             <summary>
             Client to access https://jsonplaceholder.typicode.com/

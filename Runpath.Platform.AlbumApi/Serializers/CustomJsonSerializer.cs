@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Runpath.Platform.AlbumApi.Serializers
 {
@@ -16,7 +17,7 @@ namespace Runpath.Platform.AlbumApi.Serializers
             _logger = logger;
         }
 
-        public T DeserializeJson<T>(string jsonData, JsonSerializerOptions options = null)
+        public async Task<T> DeserializeJsonAsync<T>(string jsonData, JsonSerializerOptions options = null)
         {
             
             var defaultOptions = new JsonSerializerOptions

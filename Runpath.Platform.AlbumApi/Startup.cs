@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Runpath.Platform.AlbumApi.Extensions;
+using Runpath.Platform.AlbumApi.Serializers;
 
 namespace Runpath.Platform.AlbumApi
 {
@@ -23,7 +24,8 @@ namespace Runpath.Platform.AlbumApi
                 .AddCustomMvc()
                 .AddHttpClients(Configuration)
                 .AddCustomAutoMapper()
-                .AddCustomSwagger(Configuration);
+                .AddCustomSwagger(Configuration)
+                .AddTransient<ISerializer, CustomJsonSerializer>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -3,8 +3,8 @@ using Runpath.Platform.AlbumApi.Serializers;
 using Runpath.Platform.Domain;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Runpath.Platform.AlbumApi.Services
@@ -43,7 +43,7 @@ namespace Runpath.Platform.AlbumApi.Services
 
             _logger.LogInformation("Get album {Id} from {Url}", albumId, albumPath);
             var albumJsonData = await GetJsonAsync(albumPath);
-            var album = _serializer.DeserializeJson<Album>(albumJsonData);
+            var album = await _serializer.DeserializeJsonAsync<Album>(albumJsonData);
 
             if (album == null) return album;
 
@@ -60,7 +60,7 @@ namespace Runpath.Platform.AlbumApi.Services
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
             var usersJsonData = await GetJsonAsync(USERS);
-            var users = _serializer.DeserializeJson<IEnumerable<User>>(usersJsonData);
+            var users = await _serializer.DeserializeJsonAsync<IEnumerable<User>>(usersJsonData);
             return users;
         }
 
@@ -71,7 +71,7 @@ namespace Runpath.Platform.AlbumApi.Services
             _logger.LogInformation("Get User {Id} from {Url}", userId, userPath);
 
             var userJsonData = await GetJsonAsync(userPath);
-            var user = _serializer.DeserializeJson<User>(userJsonData);
+            var user = await _serializer.DeserializeJsonAsync<User>(userJsonData);
 
             if (user == null) return user;
 
@@ -92,12 +92,17 @@ namespace Runpath.Platform.AlbumApi.Services
         private async Task<IEnumerable<Album>> GetAlbumsAsync(string path)
         {
             var albumsJsonData = await GetJsonAsync(path);
-            var albums = _serializer.DeserializeJson<IEnumerable<Album>>(albumsJsonData);
-            foreach (var album in albums)
-            {
-                album.Photos = await GetPhotosAsync(album.Id);
-            }
+            var albums = await _serializer.DeserializeJsonAsync<IEnumerable<Album>>(albumsJsonData);
+
+            if (albums == null || !albums.Any()) return albums;
+
+            await Task.WhenAll(albums.Select(GetPhotosAsync));
             return albums;
+        }
+
+        private async Task GetPhotosAsync(Album album)
+        {
+            album.Photos = await GetPhotosAsync(album.Id);
         }
 
         private async Task<IEnumerable<Photo>> GetPhotosAsync(int albumId)
@@ -107,7 +112,7 @@ namespace Runpath.Platform.AlbumApi.Services
             _logger.LogInformation("Get photos for album {Id} from {Url}", albumId, photosPath);
 
             var photosJsonData = await GetJsonAsync(photosPath);
-            var photos = _serializer.DeserializeJson<IEnumerable<Photo>>(photosJsonData);
+            var photos = await _serializer.DeserializeJsonAsync<IEnumerable<Photo>>(photosJsonData);
             return photos;
         }
 
@@ -117,18 +122,21 @@ namespace Runpath.Platform.AlbumApi.Services
 
             try
             {
-                _logger.LogInformation("Requesting data from url {Url}", resoursePath);
-                return await _httpClient.GetStringAsync(resoursePath);
+                _logger.LogInformation("Requesting data from url {BaseAddress}{Url}", _httpClient.BaseAddress, resoursePath);
+                var response = await _httpClient.GetAsync(resoursePath);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    return content ?? string.Empty;
+                }
+
+                _logger.LogInformation("Request {BaseAddress}{Url} was unsuccessful with Code", _httpClient.BaseAddress, resoursePath, response.StatusCode);
+                throw new Exception($"Unsuccessful request to url { _httpClient.BaseAddress}{resoursePath}");
             }
             catch (HttpRequestException ex)
             {
                 _logger.LogDebug("Failed to get from {Url}", resoursePath);
                 _logger.LogError("HttpRequestException {Message}", ex.Message);
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("Failed to get from {Message}", ex.Message);
                 throw ex;
             }
         }
